@@ -42,26 +42,47 @@ public class MainActivity extends AppCompatActivity {
         EditText inputSplit = (EditText) findViewById(R.id.editText4);
 
         //crashes if any of these fields are empty: make more robust
+        if (inputPrice.getText().toString().matches("")) {
+            Toast.makeText(this, "Please enter a price", Toast.LENGTH_LONG).show();
+            return;
+        }
         double price = Double.parseDouble(inputPrice.getText().toString());
 
-        //make sure input is from 0-100. default is 0 or toast "please enter val 0-1"
+        if (inputTip.getText().toString().matches("")) {
+            Toast.makeText(this, "Please enter a tip percent from 0-100", Toast.LENGTH_LONG).show();
+            return;
+        }
         double tip = Double.parseDouble(inputTip.getText().toString()) * 0.01;
+        if (tip<0 || tip>100) {
+            Toast.makeText(this, "Please enter a tip percent from 0-100", Toast.LENGTH_LONG).show();
+            return;
+        }
 
-        //if no input assume 0
+        if (inputSplit.getText().toString().matches("")) {
+            Toast.makeText(this, "Please enter split", Toast.LENGTH_LONG).show();
+            return;
+        }
         double split = Double.parseDouble(inputSplit.getText().toString());
+        if (split<1) {
+            Toast.makeText(this, "Please enter positive number for split", Toast.LENGTH_LONG).show();
+            return;
+        }
 
-        double finalDouble = (price * tip) + price;
-        double pricePerPersonDouble = ((price * tip) + price)/split;
+        // Math.floor(value * 100) / 100;
+        double tipDouble = Math.floor(price * tip * 100)/100;
+        double finalDouble = Math.floor(((price * tip) + price) * 100)/100;
+        double pricePerPersonDouble = Math.floor((((price * tip) + price)/split) * 100)/100;
 
+        String finalTip = String.valueOf(tipDouble);
         String finalPrice = String.valueOf(finalDouble);
         String finalPricePerPerson = String.valueOf(pricePerPersonDouble);
-        TextView textView = findViewById(R.id.textView5);
-        textView.setText(finalPrice);
-        TextView textView2 = findViewById(R.id.textView8);
-        textView2.setText(finalPricePerPerson);
 
-        Toast toast = Toast.makeText(getApplicationContext(), String.valueOf(split), Toast.LENGTH_LONG);
-        toast.show();
+        TextView textView1 = findViewById(R.id.textView5);
+        textView1.setText(String.format("$%s", finalPrice));
+        TextView textView2 = findViewById(R.id.textView8);
+        textView2.setText(String.format("$%s", finalPricePerPerson));
+        TextView textView3 = findViewById(R.id.textView10);
+        textView3.setText(String.format("$%s", finalTip));
     }
 
     @Override
